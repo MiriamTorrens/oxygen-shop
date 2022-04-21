@@ -25,15 +25,16 @@ const form  = document.getElementById('formulario');
 const campoNombre = document.getElementById('campoNombre');
 const campoEmail = document.getElementById('campoEmail');
 const checkbox = document.getElementById('checkbox');
-let nombreValido = false;
-let emailValido = false;
+let nombreValido;
+let emailValido;
 
-campoNombre.addEventListener('input', (e)=>{ //Validar campo nombre
+//Validar campo nombre
+campoNombre.addEventListener('input', (e)=>{ 
     if(e.target.value.length <2 || e.target.value.length>100 || e.target.value.length == 0){
         campoNombre.classList.add('form__input-invalid');
     }else{
         campoNombre.classList.remove('form__input-invalid');
-        nombreValido = true;
+        nombreValido = e.target.value;
     }
 });
 campoEmail.addEventListener('input', (e)=>{ //Validar campo email
@@ -42,7 +43,7 @@ campoEmail.addEventListener('input', (e)=>{ //Validar campo email
         e.target.classList.add('form__input-invalid');
     }else{
         e.target.classList.remove('form__input-invalid');
-        emailValido = true;
+        emailValido = e.target.value;
     }
 });
 function isChecked(casilla){//Comprobar checkbox 
@@ -106,7 +107,7 @@ document.addEventListener("keydown", e => {if(e.key === 'Escape') hideNewsletter
 const formModal = document.getElementById('formulario_modal');
 const inputModal = document.querySelector('.info__newsletter__input');
 const checkboxModal = document.querySelector('.info__newsletter__checkbox');
-let emailModal = false;
+let emailModal;
 
 inputModal.addEventListener('input', (e)=>{ //Validar campo email
     emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
@@ -114,7 +115,7 @@ inputModal.addEventListener('input', (e)=>{ //Validar campo email
         e.target.classList.add('form__input-invalid');
     }else{
         e.target.classList.remove('form__input-invalid');
-        emailValido = true;
+        emailModal = e.target.value;
     }
 });
 
@@ -124,6 +125,8 @@ formModal.addEventListener('submit', function(event){
     let checkModal = isChecked(checkboxModal);
     if(emailModal && checkModal){
         enviar(emailModal);
+        alert('Enviado');
+        console.log()
         document.getElementById('btn_send_modal').disabled = true; 
         document.getElementById('formulario_modal').reset();
         hideNewsletter();
@@ -151,7 +154,6 @@ const getMoneda = async () => {
     }
 };
 getMoneda();
-
 const select_precio = document.getElementById('select_precio');
 const precios = document.getElementsByClassName('precio');
 select_precio.addEventListener('change', function(){ 
