@@ -173,42 +173,45 @@ function slider(id){
     let slider = document.getElementById(id);
     let imagenes = slider.getElementsByTagName('img');
     let botones = slider.getElementsByTagName('button');
-    const imagenActual = imagenes[0].getAttribute('src');
+    //Guardar la primera imagen para no perderla
+    const primeraImagen = imagenes[0].getAttribute('src'); 
     imagenes[0].style.visibility='visible';
-    for(let i = 0; i < botones.length; i++){
-        botones[i].addEventListener('click', function(){
-            limpiarBotones();
-            botones[i].classList.add('slide__btn--active');
-            let indiceBoton = botones[i].getAttribute('data-index');
-            if(indiceBoton === '0'){
-                imagenes[0].setAttribute('src', imagenActual);
-            }else{
-                let src = imagenes[indiceBoton].getAttribute('src');
-                imagenes[0].setAttribute('src', src);
-            }
-        })
-    }
+
+    //Slider automático
     function intervalo(){
         let counter = 0;
         let src = imagenes[counter].getAttribute('src');
         const i = setInterval(function(){
-            botones[counter].addEventListener('click', () => clearInterval(i));
-            limpiarBotones();
-            imagenes[0].setAttribute('src', imagenActual);
-            imagenes[counter++];
-            src = imagenes[counter].getAttribute('src');
-            imagenes[0].setAttribute('src', src);
-            botones[counter].classList.add('slide__btn--active');
-            if(counter === imagenes.length-1) {
-                setTimeout(()=>{ 
-                    counter = 0; 
-                    imagenes[0].setAttribute('src', imagenActual);
-                    botones[counter].classList.add('slide__btn--active');
-                }, 2000);
+            //El bucle se detiene si pinchas en algún botón
+            botones[counter].addEventListener('click', () => clearInterval(i)); 
+            counter++;
+            if(counter === imagenes.length) {
+                counter = 0; 
+                imagenes[0].setAttribute('src', primeraImagen);
             }
-            
+            limpiarBotones();
+            cambiarImagen(counter);
         }, 2000);
     }
+    //Slider manual
+    for(let i = 0; i < botones.length; i++){
+        let indiceBotones = botones[i].getAttribute('data-index');
+        botones[i].addEventListener('click', function(){
+            limpiarBotones();
+            cambiarImagen(indiceBotones);
+        });
+    }
+    //Cambiar la imagen
+    function cambiarImagen(indice){
+        botones[indice].classList.add('slide__btn--active');
+        if(indice === '0'){
+            imagenes[0].setAttribute('src', primeraImagen);
+        }else{
+            let src = imagenes[indice].getAttribute('src');
+            imagenes[0].setAttribute('src', src);
+        }
+    }
+    //Desactivar los botones que no corresponden con la imagen
     function limpiarBotones(){
         for(let j = 0; j < botones.length; j++){
             botones[j].classList.remove('slide__btn--active');
